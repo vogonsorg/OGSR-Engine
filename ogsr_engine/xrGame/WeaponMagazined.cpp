@@ -1229,7 +1229,17 @@ void CWeaponMagazined::PlayAnimIdle()
 void CWeaponMagazined::PlayAnimShoot()
 {
 	VERIFY(GetState()==eFire || GetState()==eFire2);
-	PlayHUDMotion("anim_shoot", "anm_shots", false, this, GetState());
+
+	string_path guns_shoot_anm{};
+	xr_strconcat(guns_shoot_anm, "anm_shoot", (this->IsZoomed() && !this->IsRotatingToZoom()) ? (this->IsScopeAttached() ? "_aim_scope" : "_aim") : "", this->IsSilencerAttached() ? "_sil" : "");
+	if (AnimationExist(guns_shoot_anm)) {
+		Msg("--[%s] Play anim [%s] for [%s]", __FUNCTION__, guns_shoot_anm, this->cNameSect().c_str());
+		PlayHUDMotion(guns_shoot_anm, false, this, GetState());
+	}
+	else {
+		Msg("!![%s] anim [%s] not found for [%s]", __FUNCTION__, guns_shoot_anm, this->cNameSect().c_str());
+		PlayHUDMotion("anim_shoot", "anm_shots", false, this, GetState());
+	}
 }
 
 void CWeaponMagazined::OnZoomIn			()
