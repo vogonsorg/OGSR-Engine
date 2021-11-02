@@ -138,6 +138,18 @@ void CWeaponPistol::PlayAnimHide()
 void CWeaponPistol::PlayAnimShoot()
 {
 	VERIFY(GetState() == eFire || GetState() == eFire2);
+
+	string_path guns_shoot_anm{};
+	xr_strconcat(guns_shoot_anm, "anm_shoot", (this->IsZoomed() && !this->IsRotatingToZoom()) ? "_aim" : "", iAmmoElapsed == 1 ? "_last" : "", this->IsSilencerAttached() ? "_sil" : "");
+	if (AnimationExist(guns_shoot_anm)) {
+		Msg("--[%s] Play anim [%s] for [%s]", __FUNCTION__, guns_shoot_anm, this->cNameSect().c_str());
+		PlayHUDMotion(guns_shoot_anm, false, this, GetState());
+		return;
+	}
+	else
+		Msg("!![%s] anim [%s] not found for [%s]", __FUNCTION__, guns_shoot_anm, this->cNameSect().c_str());
+
+
 	if (iAmmoElapsed > 1)
 	{
 		PlayHUDMotion("anim_shoot", "anm_shots", FALSE, this, GetState());
