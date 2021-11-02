@@ -213,10 +213,10 @@ void attachable_hud_item::setup_firedeps(firedeps& fd)
 		m_item_transform.transform_tiny(fd.vLastFP);
 		fd.vLastFP.add(Device.vCameraPosition);
 
-		//KRodin придумал костыль. Из-за того, что fire_point расположен сильно впереди ствола, попробуем точку вылета пули считать от позиции fire_point.z == -0.5, т.е. ближе к актору, чтобы нельзя было стрелять сквозь стены.
+		//KRodin придумал костыль. Из-за того, что fire_point расположен сильно впереди ствола, попробуем точку вылета пули считать от позиции fire_point.z == -1, т.е. ближе к актору, чтобы нельзя было стрелять сквозь стены.
 		if (m_measures.useCopFirePoint)
 		{
-			const Fvector m_shoot_point_offset{ m_measures.m_fire_point_offset.x, m_measures.m_fire_point_offset.y, -0.5f };
+			const Fvector m_shoot_point_offset{ m_measures.m_fire_point_offset.x, m_measures.m_fire_point_offset.y, -1.f };
 			fire_mat.transform_tiny(fd.vLastShootPoint, m_shoot_point_offset);
 			m_item_transform.transform_tiny(fd.vLastShootPoint);
 			fd.vLastShootPoint.add(Device.vCameraPosition);
