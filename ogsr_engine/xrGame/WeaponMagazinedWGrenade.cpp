@@ -680,24 +680,21 @@ void CWeaponMagazinedWGrenade::PlayAnimIdle()
 
 	if (IsGrenadeLauncherAttached())
 	{
-		if (m_bGrenadeMode)
-		{
-			if (IsZoomed())
-				PlayHUDMotion("anim_idle_g_aim", "anm_idle_g_aim", /*FALSE*/TRUE, nullptr, GetState());
-			else
-				PlayHUDMotion("anim_idle_g", "anm_idle_g", /*FALSE*/TRUE, nullptr, GetState());
-		}
-		else
-		{
-			if (IsZoomed())
-				PlayHUDMotion("anim_idle_gl_aim", "anm_idle_w_gl_aim", /*FALSE*/TRUE, nullptr, GetState());
-			else
-				PlayHUDMotion("anim_idle_gl", "anm_idle_w_gl", /*FALSE*/TRUE, nullptr, GetState());
-
-		}
-
 		if (IsZoomed())
 		{
+			if (IsRotatingToZoom())
+			{
+				string_path guns_aim_anm{};
+				xr_strconcat(guns_aim_anm, "anm_idle_aim_start", m_bGrenadeMode ? "_g" : "_w_gl");
+				if (AnimationExist(guns_aim_anm)) {
+					Msg("--[%s] Play anim [%s] for [%s]", __FUNCTION__, guns_aim_anm, this->cNameSect().c_str());
+					PlayHUDMotion(guns_aim_anm, true, nullptr, GetState());
+					return;
+				}
+				else
+					Msg("!![%s] anim [%s] not found for [%s]", __FUNCTION__, guns_aim_anm, this->cNameSect().c_str());
+			}
+
 			if (m_bGrenadeMode)
 				PlayHUDMotion("anim_idle_g_aim", "anm_idle_g_aim", /*FALSE*/TRUE, nullptr, GetState());
 			else
@@ -740,7 +737,7 @@ void CWeaponMagazinedWGrenade::PlayAnimIdle()
 					else if (AnimationExist("anim_idle_sprint"))
 						PlayHUDMotion("anim_idle_sprint", TRUE, nullptr, GetState());
 					else
-						PlayHUDMotion("anim_idle_g", TRUE, nullptr, GetState());
+						PlayHUDMotion("anim_idle_g", "anm_idle_g", TRUE, nullptr, GetState());
 				}
 				else if (act_state == 2)
 				{
@@ -751,7 +748,7 @@ void CWeaponMagazinedWGrenade::PlayAnimIdle()
 					else if (AnimationExist("anim_idle_moving"))
 						PlayHUDMotion("anim_idle_moving", TRUE, nullptr, GetState());
 					else
-						PlayHUDMotion("anim_idle_g", TRUE, nullptr, GetState());
+						PlayHUDMotion("anim_idle_g", "anm_idle_g", TRUE, nullptr, GetState());
 				}
 				else if (act_state == 3)
 					if (AnimationExist("anm_idle_moving_crouch_g"))
@@ -770,7 +767,7 @@ void CWeaponMagazinedWGrenade::PlayAnimIdle()
 					else if (AnimationExist("anim_idle_sprint"))
 						PlayHUDMotion("anim_idle_sprint", TRUE, nullptr, GetState());
 					else
-						PlayHUDMotion("anim_idle_gl", TRUE, nullptr, GetState());
+						PlayHUDMotion("anim_idle_gl", "anm_idle_w_gl", TRUE, nullptr, GetState());
 				}
 				else if (act_state == 2)
 				{
@@ -781,7 +778,7 @@ void CWeaponMagazinedWGrenade::PlayAnimIdle()
 					else if (AnimationExist("anim_idle_moving"))
 						PlayHUDMotion("anim_idle_moving", TRUE, nullptr, GetState());
 					else
-						PlayHUDMotion("anim_idle_gl", TRUE, nullptr, GetState());
+						PlayHUDMotion("anim_idle_gl", "anm_idle_w_gl", TRUE, nullptr, GetState());
 				}
 				else if (act_state == 3)
 					if (AnimationExist("anm_idle_moving_crouch_w_gl"))
